@@ -113,4 +113,32 @@
     width: 100%;
     flex-direction: column;
   }
+
+  .table {
+    overflow-x:auto;
+    width: 100%;
+  }
+  
 }
+
+.multiplyTableInput {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1rem;
+  text-align: center;
+  border: 1px solid #C4B1B0;
+}
+
+.multiplyTableHeader {
+  text-align: center;
+  width: 3rem;
+  height: 3rem;
+}
+
+.rangeInput {
+  font-size: 1rem;
+  border: 1px solid #C4B1B0;
+  height: 3rem;
+  text-align: center;
+}
+
