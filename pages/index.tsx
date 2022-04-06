@@ -34,7 +34,7 @@ const Home: NextPage = () => {
   };
 
   const readableType = (type: string) => {
-    const map:{[key: string]: string} = {
+    const map: { [key: string]: string } = {
       '+': '+',
       '-': '-',
       '*': 'x',
@@ -208,7 +208,7 @@ const Home: NextPage = () => {
             }
             placeholder="0"
             type="text"
-            pattern="[0-9]"
+            pattern="[0-9]*"
             size={4}
           />{' '}
         </p>
@@ -220,7 +220,7 @@ const Home: NextPage = () => {
             onChange={(event) => setProblemMin(parseInt(event.target.value))}
             placeholder="0"
             type="text"
-            pattern="[0-9]"
+            pattern="[0-9]*"
             size={4}
           />{' '}
           -{' '}
@@ -230,7 +230,7 @@ const Home: NextPage = () => {
             onChange={(event) => setProblemMax(parseInt(event.target.value))}
             placeholder="0"
             type="text"
-            pattern="[0-9]"
+            pattern="[0-9]*"
             size={4}
           />
           <button className={styles.button} onClick={generateProblems}>
@@ -242,8 +242,11 @@ const Home: NextPage = () => {
           {generatedProblems.map((problem, index) => {
             return (
               <div key={`problem-${index}`} className={styles.problem}>
-                {`${problem.left} ${readableType(problem.type)} ${problem.right} = `}
+                {`${problem.left} ${readableType(problem.type)} ${
+                  problem.right
+                } = `}
                 <input
+                  pattern="[0-9]*"
                   className={styles.multiplyTableInput}
                   size={5}
                   onChange={handleProblemInput(problem)}
@@ -262,7 +265,7 @@ const Home: NextPage = () => {
             onChange={setMultiMin}
             placeholder="0"
             type="text"
-            pattern="[0-9]"
+            pattern="[0-9]*"
             size={4}
           />{' '}
           -{' '}
@@ -272,7 +275,7 @@ const Home: NextPage = () => {
             onChange={setMultiMax}
             placeholder="0"
             type="text"
-            pattern="[0-9]"
+            pattern="[0-9]*"
             size={4}
           />
         </p>
@@ -300,6 +303,7 @@ const Home: NextPage = () => {
                         .map((childItem, childIndex) => (
                           <td key={`child-${childIndex}`}>
                             <input
+                              pattern="[0-9]*"
                               className={styles.multiplyTableInput}
                               size={5}
                               onChange={handleMultiplicationInput(
