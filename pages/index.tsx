@@ -237,7 +237,6 @@ const Home: NextPage = () => {
               }
               placeholder="0"
               type="text"
-              pattern="[0-9]*"
               size={4}
             />{' '}
           </div>
@@ -249,7 +248,7 @@ const Home: NextPage = () => {
               onChange={(event) => setProblemMin(parseInt(event.target.value))}
               placeholder="0"
               type="text"
-              pattern="[0-9]*"
+              
               size={4}
             />{' '}
             -{' '}
@@ -259,7 +258,7 @@ const Home: NextPage = () => {
               onChange={(event) => setProblemMax(parseInt(event.target.value))}
               placeholder="0"
               type="text"
-              pattern="[0-9]*"
+              
               size={4}
             />
           </div>
@@ -278,7 +277,7 @@ const Home: NextPage = () => {
                   problem.right
                 } = `}
                 <input
-                  pattern="[0-9]*"
+                  
                   className={styles.multiplyTableInput}
                   size={5}
                   ref={problemRefs.current[index]}
@@ -298,7 +297,7 @@ const Home: NextPage = () => {
             onChange={setMultiMin}
             placeholder="0"
             type="text"
-            pattern="[0-9]*"
+            
             size={4}
           />{' '}
           -{' '}
@@ -308,7 +307,7 @@ const Home: NextPage = () => {
             onChange={setMultiMax}
             placeholder="0"
             type="text"
-            pattern="[0-9]*"
+            
             size={4}
           />
         </p>
@@ -336,7 +335,7 @@ const Home: NextPage = () => {
                         .map((childItem, childIndex) => (
                           <td key={`child-${childIndex}`}>
                             <input
-                              pattern="[0-9]*"
+                              
                               className={styles.multiplyTableInput}
                               size={5}
                               onChange={handleMultiplicationInput(
