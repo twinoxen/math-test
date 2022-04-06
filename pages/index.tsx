@@ -44,6 +44,16 @@ const Home: NextPage = () => {
     return map[type];
   };
 
+  const focusNextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputs = Array.from(document.querySelectorAll('input'));
+
+    const index = inputs.findIndex((input) => input === event.target);
+
+    if (!index || index >= inputs.length) return;
+
+    inputs[index + 1].focus();
+  };
+
   const generateProblems = () => {
     if (problemMin >= problemMax || isNaN(problemMin) || isNaN(problemMax))
       return;
@@ -56,7 +66,7 @@ const Home: NextPage = () => {
       problems.push({ left, right, type: problemType });
     }
 
-    setGeneratedProblems([...(generatedProblems || []), ...problems]);
+    setGeneratedProblems(problems);
   };
 
   const evaluate = (
@@ -99,6 +109,7 @@ const Home: NextPage = () => {
       }
 
       event.target.style.backgroundColor = 'green';
+      focusNextInput(event);
     };
 
   const setMultiRange = () => {
@@ -172,6 +183,7 @@ const Home: NextPage = () => {
       }
 
       event.target.style.backgroundColor = 'green';
+      focusNextInput(event);
     };
 
   return (
@@ -184,59 +196,64 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Do you even math? 🤷‍♂️</h1>
-        <h2>Generate random problems</h2>
-        <p>
-          Type of problem{' '}
-          <select
-            className={styles.select}
-            value={problemType}
-            onChange={(event) => setProblemType(event.target.value)}
-          >
-            <option value="+">Addition</option>
-            <option value="-">Subtraction</option>
-            <option value="*">Multiplication</option>
-            <option value="/">Division</option>
-          </select>
-        </p>
-        <p>
-          Number of questions{' '}
-          <input
-            className={styles.rangeInput}
-            value={numberOfProblems}
-            onChange={(event) =>
-              setNumberOfProblems(parseInt(event.target.value))
-            }
-            placeholder="0"
-            type="text"
-            pattern="[0-9]*"
-            size={4}
-          />{' '}
-        </p>
-        <p>
-          Number range{' '}
-          <input
-            className={styles.rangeInput}
-            value={problemMin}
-            onChange={(event) => setProblemMin(parseInt(event.target.value))}
-            placeholder="0"
-            type="text"
-            pattern="[0-9]*"
-            size={4}
-          />{' '}
-          -{' '}
-          <input
-            className={styles.rangeInput}
-            value={problemMax}
-            onChange={(event) => setProblemMax(parseInt(event.target.value))}
-            placeholder="0"
-            type="text"
-            pattern="[0-9]*"
-            size={4}
-          />
-          <button className={styles.button} onClick={generateProblems}>
-            Generate
-          </button>
-        </p>
+        <h2>Generate random math problems</h2>
+
+        <div className={styles.form}>
+          <div className={styles.formItem}>Type of problem </div>
+          <div className={styles.formItem}>
+            <select
+              className={styles.select}
+              value={problemType}
+              onChange={(event) => setProblemType(event.target.value)}
+            >
+              <option value="+">Addition</option>
+              <option value="-">Subtraction</option>
+              <option value="*">Multiplication</option>
+              <option value="/">Division</option>
+            </select>
+          </div>
+          <div className={styles.formItem}>Number of problems</div>
+          <div className={styles.formItem}>
+            <input
+              className={styles.rangeInput}
+              value={numberOfProblems}
+              onChange={(event) =>
+                setNumberOfProblems(parseInt(event.target.value))
+              }
+              placeholder="0"
+              type="text"
+              pattern="[0-9]*"
+              size={4}
+            />{' '}
+          </div>
+          <div className={styles.formItem}>Number range </div>
+          <div className={styles.formItem}>
+            <input
+              className={styles.rangeInput}
+              value={problemMin}
+              onChange={(event) => setProblemMin(parseInt(event.target.value))}
+              placeholder="0"
+              type="text"
+              pattern="[0-9]*"
+              size={4}
+            />{' '}
+            -{' '}
+            <input
+              className={styles.rangeInput}
+              value={problemMax}
+              onChange={(event) => setProblemMax(parseInt(event.target.value))}
+              placeholder="0"
+              type="text"
+              pattern="[0-9]*"
+              size={4}
+            />
+          </div>
+          <div className={styles.formItem} style={{'gridColumnStart': 2}}>
+            <button className={styles.button} onClick={generateProblems}>
+              Generate
+            </button>
+          </div>
+        </div>
 
         <div className={styles.problems}>
           {generatedProblems.map((problem, index) => {

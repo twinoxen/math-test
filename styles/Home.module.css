@@ -108,24 +108,6 @@
   margin-left: 0.5rem;
 }
 
-@media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .problems {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .table {
-    overflow-x:auto;
-    width: 100%;
-  }
-  
-}
-
 .multiplyTableInput {
   width: 3rem;
   height: 3rem;
@@ -154,7 +136,6 @@
   text-align: center;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  margin-left: 0.5rem;
 }
 
 .button {
@@ -164,7 +145,6 @@
   text-align: center;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  margin-left: 0.5rem;
   cursor: pointer;
 }
 
@@ -190,3 +170,41 @@
   max-width: 300px;
 }
 
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.formItem {
+  align-self: center;
+  padding: 0.5rem;
+}
+
+
+@media (max-width: 600px) {
+  .grid {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .problems {
+    width: 100%;
+    flex-direction: row;
+  }
+
+  .problem {
+    margin: 0.5rem;
+  }
+
+  .table {
+    overflow-x:auto;
+    width: 100%;
+  }
+  
+}
+
+@media (max-width: 600px) {
+  .button {
+    margin: 1rem auto 0 auto;
+  }
+}
