@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { createRef, RefObject, useEffect, useRef, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
@@ -11,6 +11,8 @@ const Home: NextPage = () => {
   const [numberOfProblems, setNumberOfProblems] = useState(5);
   const [problemMin, setProblemMin] = useState(1);
   const [problemMax, setProblemMax] = useState(10);
+
+  const problemRefs = useRef([]);
 
   const [multiplicationNumbersRange, setMultiplicationNumbersRange] = useState(
     new Array(11).fill('').map((a, i) => i)
@@ -66,8 +68,21 @@ const Home: NextPage = () => {
       problems.push({ left, right, type: problemType });
     }
 
+    if (problemRefs.current.length !== problems.length) {
+      problemRefs.current = Array(problems.length)
+        .fill('')
+        .map((_, i) => problemRefs.current[i] || createRef());
+    }
+
     setGeneratedProblems(problems);
   };
+
+  useEffect(() => {
+    problemRefs.current.forEach((item: any) => {
+      item.current.value = '';
+      item.current.style.backgroundColor = '#fff';
+    });
+  }, [generatedProblems]);
 
   const evaluate = (
     input: number,
@@ -248,7 +263,7 @@ const Home: NextPage = () => {
               size={4}
             />
           </div>
-          <div className={styles.formItem} style={{'gridColumnStart': 2}}>
+          <div className={styles.formItem} style={{ gridColumnStart: 2 }}>
             <button className={styles.button} onClick={generateProblems}>
               Generate
             </button>
@@ -266,6 +281,7 @@ const Home: NextPage = () => {
                   pattern="[0-9]*"
                   className={styles.multiplyTableInput}
                   size={5}
+                  ref={problemRefs.current[index]}
                   onChange={handleProblemInput(problem)}
                 />
               </div>
