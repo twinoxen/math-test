@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
+// commit to kick off build :TODO delete
+
 const Home: NextPage = () => {
   const [multiplicationNumbersRange, setMultiplicationNumbersRange] = useState(
     new Array(11).fill('').map((a, i) => i)
