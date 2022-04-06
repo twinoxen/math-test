@@ -1,9 +1,37 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
+import { useState } from 'react';
+import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
+  const [numbersRange, setNumbersRange] = useState(
+    new Array(11).fill('').map((a, i) => i)
+  );
+
+  const validate = (value: number, column: number, row: number) => {
+    return value === column * row;
+  };
+
+  const handle =
+    (column: number, row: number) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.value === '') {
+        event.target.style.backgroundColor = 'white';
+        return 
+      }
+      
+      const input = parseInt(event.target.value);
+
+      if (!validate(input, column, row)) {
+        event.target.style.backgroundColor = 'red';
+
+        return;
+      }
+
+      event.target.style.backgroundColor = 'green';
+    };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,44 +41,31 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <div>range 0 - 10</div>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <table>
+          <tbody>
+            {numbersRange.map((parentItem, index) => (
+              <tr key={`parent-${parentItem}`}>
+                {parentItem !== 0 && <td>{parentItem}</td>}
+                {parentItem === 0
+                  ? numbersRange.map((childItem, childIndex) => (
+                      <td key={`child-${childIndex}`}>{childIndex}</td>
+                    ))
+                  : numbersRange
+                      .filter((i) => i !== 0)
+                      .map((childItem, childIndex) => (
+                        <td key={`child-${childIndex}`}>
+                          <input
+                            size={5}
+                            onChange={handle(parentItem, childItem)}
+                          />
+                        </td>
+                      ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </main>
 
       <footer className={styles.footer}>
@@ -66,7 +81,7 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
