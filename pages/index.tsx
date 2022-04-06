@@ -10,6 +10,7 @@ export interface Problem {
   type: string;
   passed?: boolean;
   time?: number;
+  elapsed?: number;
 }
 
 const Home: NextPage = () => {
@@ -22,6 +23,7 @@ const Home: NextPage = () => {
   const problemRefs = useRef([]);
 
   const [time, setTime] = useState(0);
+  const [lastTime, setLastTime] = useState(0)
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
 
@@ -118,7 +120,7 @@ const Home: NextPage = () => {
         return;
       }
 
-      if(isPaused) handlePauseResume()
+      if (isPaused) handlePauseResume();
 
       const input = parseFloat(event.target.value);
 
@@ -131,9 +133,13 @@ const Home: NextPage = () => {
 
       problem.passed = true;
       problem.time = time;
+      problem.elapsed = lastTime > 0 ? time - lastTime : time;
+
+      setLastTime(time);
 
       event.target.style.backgroundColor = 'green';
       event.target.style.color = 'white';
+      
       focusNextInput(event);
 
       if (
@@ -349,7 +355,11 @@ const Home: NextPage = () => {
         <div className={styles.problems}>
           {generatedProblems.map((problem, index) => {
             return (
-              <div key={`problem-${index}`} className={styles.problem} style={{position: 'relative'}}>
+              <div
+                key={`problem-${index}`}
+                className={styles.problem}
+                style={{ position: 'relative' }}
+              >
                 {`${problem.left} ${readableType(problem.type)} ${
                   problem.right
                 } = `}
@@ -359,9 +369,17 @@ const Home: NextPage = () => {
                   ref={problemRefs.current[index]}
                   onChange={handleProblemInput(problem)}
                 />
-                {problem.time && (
-                  <div style={{ position: 'absolute', display: 'flex', gap: '0.15rem', right: '0.4rem', color: '#99D492' }}>
-                    <Time time={problem.time} />
+                {problem.elapsed && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      display: 'flex',
+                      gap: '0.15rem',
+                      right: '0.4rem',
+                      color: '#99D492',
+                    }}
+                  >
+                    <Time time={problem.elapsed} />
                     <Image
                       src="/timer-icon.svg"
                       alt="timer"
@@ -369,7 +387,6 @@ const Home: NextPage = () => {
                       height={15}
                       style={{ cursor: 'pointer' }}
                     />
-                    
                   </div>
                 )}
               </div>
