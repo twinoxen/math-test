@@ -105,7 +105,7 @@ const Home: NextPage = () => {
         break;
     }
 
-    return input === result;
+    return input.toFixed(2) === result?.toFixed(2);
   };
 
   const handleProblemInput =
@@ -262,12 +262,15 @@ const Home: NextPage = () => {
               size={4}
             />
           </div>
+
           <div className={styles.formItem} style={{ gridColumnStart: 2 }}>
             <button className={styles.button} onClick={generateProblems}>
               Generate
             </button>
           </div>
         </div>
+
+        {problemType === '/' && <p style={{marginTop: '3rem'}}>precision to the nearest hundredth decimal exp: 1.03</p>}
 
         <div className={styles.problems}>
           {generatedProblems.map((problem, index) => {
