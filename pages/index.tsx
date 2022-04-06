@@ -1,12 +1,17 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
-// commit to kick off build :TODO delete
-
 const Home: NextPage = () => {
+  const [generatedProblems, setGeneratedProblems] = useState<
+    { left: number; right: number; type: string }[]
+  >([]);
+  const [problemType, setProblemType] = useState('+');
+  const [numberOfProblems, setNumberOfProblems] = useState(5);
+  const [problemMin, setProblemMin] = useState(1);
+  const [problemMax, setProblemMax] = useState(10);
+
   const [multiplicationNumbersRange, setMultiplicationNumbersRange] = useState(
     new Array(11).fill('').map((a, i) => i)
   );
@@ -24,6 +29,78 @@ const Home: NextPage = () => {
     return true;
   };
 
+  const randomNumber = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min) + min);
+  };
+
+  const readableType = (type: string) => {
+    const map:{[key: string]: string} = {
+      '+': '+',
+      '-': '-',
+      '*': 'x',
+      '/': '÷',
+    };
+
+    return map[type];
+  };
+
+  const generateProblems = () => {
+    if (problemMin >= problemMax || isNaN(problemMin) || isNaN(problemMax))
+      return;
+
+    const problems: { left: number; right: number; type: string }[] = [];
+
+    for (let index = 0; index < numberOfProblems + 1; index++) {
+      const left = randomNumber(problemMin, problemMax);
+      const right = randomNumber(problemMin, problemMax);
+      problems.push({ left, right, type: problemType });
+    }
+
+    setGeneratedProblems([...(generatedProblems || []), ...problems]);
+  };
+
+  const evaluate = (
+    input: number,
+    problem: { left: number; right: number; type: string }
+  ) => {
+    let result: number | null = null;
+
+    switch (problem.type) {
+      case '+':
+        result = problem.left + problem.right;
+        break;
+      case '-':
+        result = problem.left - problem.right;
+        break;
+      case '*':
+        result = problem.left * problem.right;
+        break;
+      case '/':
+        result = problem.left / problem.right;
+        break;
+    }
+
+    return input === result;
+  };
+
+  const handleProblemInput =
+    (problem: { left: number; right: number; type: string }) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!onlyNumber(event)) {
+        return;
+      }
+
+      const input = parseFloat(event.target.value);
+
+      if (!evaluate(input, problem)) {
+        event.target.style.backgroundColor = 'red';
+
+        return;
+      }
+
+      event.target.style.backgroundColor = 'green';
+    };
+
   const setMultiRange = () => {
     if (
       multiplicationMin >= multiplicationMax ||
@@ -32,12 +109,6 @@ const Home: NextPage = () => {
     )
       return;
 
-    console.log(
-      'multiplicationMin',
-      multiplicationMin,
-      'multiplicationMax',
-      multiplicationMax
-    );
     const range: number[] = [];
 
     for (
@@ -47,8 +118,6 @@ const Home: NextPage = () => {
     ) {
       range.push(index);
     }
-
-    console.log('range', range);
 
     setMultiplicationNumbersRange(range);
   };
@@ -115,6 +184,74 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Do you even math? 🤷‍♂️</h1>
+        <h2>Generate random problems</h2>
+        <p>
+          Type of problem{' '}
+          <select
+            className={styles.select}
+            value={problemType}
+            onChange={(event) => setProblemType(event.target.value)}
+          >
+            <option value="+">Addition</option>
+            <option value="-">Subtraction</option>
+            <option value="*">Multiplication</option>
+            <option value="/">Division</option>
+          </select>
+        </p>
+        <p>
+          Number of questions{' '}
+          <input
+            className={styles.rangeInput}
+            value={numberOfProblems}
+            onChange={(event) =>
+              setNumberOfProblems(parseInt(event.target.value))
+            }
+            placeholder="0"
+            type="text"
+            pattern="[0-9]"
+            size={4}
+          />{' '}
+        </p>
+        <p>
+          Number range{' '}
+          <input
+            className={styles.rangeInput}
+            value={problemMin}
+            onChange={(event) => setProblemMin(parseInt(event.target.value))}
+            placeholder="0"
+            type="text"
+            pattern="[0-9]"
+            size={4}
+          />{' '}
+          -{' '}
+          <input
+            className={styles.rangeInput}
+            value={problemMax}
+            onChange={(event) => setProblemMax(parseInt(event.target.value))}
+            placeholder="0"
+            type="text"
+            pattern="[0-9]"
+            size={4}
+          />
+          <button className={styles.button} onClick={generateProblems}>
+            Generate
+          </button>
+        </p>
+
+        <div className={styles.problems}>
+          {generatedProblems.map((problem, index) => {
+            return (
+              <div key={`problem-${index}`} className={styles.problem}>
+                {`${problem.left} ${readableType(problem.type)} ${problem.right} = `}
+                <input
+                  className={styles.multiplyTableInput}
+                  size={5}
+                  onChange={handleProblemInput(problem)}
+                />
+              </div>
+            );
+          })}
+        </div>
 
         <h2>Multiplication Table</h2>
         <p>

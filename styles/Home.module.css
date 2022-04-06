@@ -142,3 +142,33 @@
   text-align: center;
 }
 
+.select {
+  font-size: 1rem;
+  border: 1px solid #C4B1B0;
+  height: 3rem;
+  text-align: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.button {
+  font-size: 1rem;
+  border: 1px solid #C4B1B0;
+  height: 3rem;
+  text-align: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.problems {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.problem {
+  margin-bottom: 1rem;
+}
+
