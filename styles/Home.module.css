@@ -140,12 +140,23 @@
 
 .button {
   font-size: 1rem;
-  border: 1px solid #C4B1B0;
+  border: 0px solid #C4B1B0;
+  border-radius: 5%;
   height: 3rem;
   text-align: center;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   cursor: pointer;
+  background-color: #137177;
+  color: #fff; 
+}
+
+.button:hover {
+  background-color: #188977;
+}
+
+.button:hover {
+  background-color: #39A96B;
 }
 
 .problems {

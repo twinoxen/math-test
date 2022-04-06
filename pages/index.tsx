@@ -1,18 +1,29 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { createRef, RefObject, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { createRef, useCallback, useEffect, useRef, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
+export interface Problem {
+  left: number;
+  right: number;
+  type: string;
+  passed?: boolean;
+  time?: number;
+}
+
 const Home: NextPage = () => {
-  const [generatedProblems, setGeneratedProblems] = useState<
-    { left: number; right: number; type: string }[]
-  >([]);
+  const [generatedProblems, setGeneratedProblems] = useState<Problem[]>([]);
   const [problemType, setProblemType] = useState('+');
   const [numberOfProblems, setNumberOfProblems] = useState(5);
   const [problemMin, setProblemMin] = useState(1);
   const [problemMax, setProblemMax] = useState(10);
 
   const problemRefs = useRef([]);
+
+  const [time, setTime] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const [isPaused, setIsPaused] = useState(true);
 
   const [multiplicationNumbersRange, setMultiplicationNumbersRange] = useState(
     new Array(11).fill('').map((a, i) => i)
@@ -60,7 +71,10 @@ const Home: NextPage = () => {
     if (problemMin >= problemMax || isNaN(problemMin) || isNaN(problemMax))
       return;
 
-    const problems: { left: number; right: number; type: string }[] = [];
+    handleReset();
+    handleStart();
+
+    const problems: Problem[] = [];
 
     for (let index = 0; index < numberOfProblems + 1; index++) {
       const left = randomNumber(problemMin, problemMax);
@@ -77,17 +91,7 @@ const Home: NextPage = () => {
     setGeneratedProblems(problems);
   };
 
-  useEffect(() => {
-    problemRefs.current.forEach((item: any) => {
-      item.current.value = '';
-      item.current.style.backgroundColor = '#fff';
-    });
-  }, [generatedProblems]);
-
-  const evaluate = (
-    input: number,
-    problem: { left: number; right: number; type: string }
-  ) => {
+  const evaluate = (input: number, problem: Problem) => {
     let result: number | null = null;
 
     switch (problem.type) {
@@ -109,22 +113,36 @@ const Home: NextPage = () => {
   };
 
   const handleProblemInput =
-    (problem: { left: number; right: number; type: string }) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (problem: Problem) => (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!onlyNumber(event)) {
         return;
       }
+
+      if(isPaused) handlePauseResume()
 
       const input = parseFloat(event.target.value);
 
       if (!evaluate(input, problem)) {
         event.target.style.backgroundColor = 'red';
+        event.target.style.color = 'white';
 
         return;
       }
 
+      problem.passed = true;
+      problem.time = time;
+
       event.target.style.backgroundColor = 'green';
+      event.target.style.color = 'white';
       focusNextInput(event);
+
+      if (
+        generatedProblems.length &&
+        generatedProblems.every((problem) => problem.passed === true) &&
+        !isPaused
+      ) {
+        handlePauseResume();
+      }
     };
 
   const setMultiRange = () => {
@@ -201,6 +219,45 @@ const Home: NextPage = () => {
       focusNextInput(event);
     };
 
+  const handleStart = () => {
+    setIsActive(true);
+    setIsPaused(false);
+  };
+
+  const handlePauseResume = () => {
+    setIsPaused(!isPaused);
+  };
+
+  const handleReset = () => {
+    setIsActive(false);
+    setTime(0);
+  };
+
+  useEffect(() => {
+    problemRefs.current.forEach((item: any) => {
+      if (!item.current) return;
+
+      item.current.value = '';
+      item.current.style.backgroundColor = '#fff';
+      item.current.style.color = '#000';
+    });
+  }, [generatedProblems]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timer | null = null;
+
+    if (isActive && isPaused === false) {
+      interval = setInterval(() => {
+        setTime((time) => time + 10);
+      }, 10);
+    } else {
+      if (interval) clearInterval(interval);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isActive, isPaused]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -211,7 +268,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Do you even math? 🤷‍♂️</h1>
-        <h2>Generate random math problems</h2>
+        <h2 style={{ marginTop: '4rem' }}>Generate random math problems</h2>
 
         <div className={styles.form}>
           <div className={styles.formItem}>Type of problem </div>
@@ -248,7 +305,6 @@ const Home: NextPage = () => {
               onChange={(event) => setProblemMin(parseInt(event.target.value))}
               placeholder="0"
               type="text"
-              
               size={4}
             />{' '}
             -{' '}
@@ -258,34 +314,64 @@ const Home: NextPage = () => {
               onChange={(event) => setProblemMax(parseInt(event.target.value))}
               placeholder="0"
               type="text"
-              
               size={4}
             />
           </div>
-
-          <div className={styles.formItem} style={{ gridColumnStart: 2 }}>
+          <div className={styles.formItem}>
+            <div
+              style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+            >
+              <div onClick={handlePauseResume}>
+                <Image
+                  src="/timer-icon.svg"
+                  alt="timer"
+                  width={30}
+                  height={30}
+                  style={{ cursor: 'pointer' }}
+                />
+              </div>
+              <Time time={time} />
+            </div>
+          </div>
+          <div className={styles.formItem}>
             <button className={styles.button} onClick={generateProblems}>
               Generate
             </button>
           </div>
         </div>
 
-        {problemType === '/' && <p style={{marginTop: '3rem'}}>precision to the nearest hundredth decimal exp: 1.03</p>}
+        {problemType === '/' && (
+          <p style={{ marginTop: '3rem' }}>
+            precision to the nearest hundredth decimal exp: 1.03
+          </p>
+        )}
 
         <div className={styles.problems}>
           {generatedProblems.map((problem, index) => {
             return (
-              <div key={`problem-${index}`} className={styles.problem}>
+              <div key={`problem-${index}`} className={styles.problem} style={{position: 'relative'}}>
                 {`${problem.left} ${readableType(problem.type)} ${
                   problem.right
                 } = `}
                 <input
-                  
                   className={styles.multiplyTableInput}
                   size={5}
                   ref={problemRefs.current[index]}
                   onChange={handleProblemInput(problem)}
                 />
+                {problem.time && (
+                  <div style={{ position: 'absolute', display: 'flex', gap: '0.15rem', right: '0.4rem', color: '#99D492' }}>
+                    <Time time={problem.time} />
+                    <Image
+                      src="/timer-icon.svg"
+                      alt="timer"
+                      width={15}
+                      height={15}
+                      style={{ cursor: 'pointer' }}
+                    />
+                    
+                  </div>
+                )}
               </div>
             );
           })}
@@ -300,7 +386,6 @@ const Home: NextPage = () => {
             onChange={setMultiMin}
             placeholder="0"
             type="text"
-            
             size={4}
           />{' '}
           -{' '}
@@ -310,7 +395,6 @@ const Home: NextPage = () => {
             onChange={setMultiMax}
             placeholder="0"
             type="text"
-            
             size={4}
           />
         </p>
@@ -338,7 +422,6 @@ const Home: NextPage = () => {
                         .map((childItem, childIndex) => (
                           <td key={`child-${childIndex}`}>
                             <input
-                              
                               className={styles.multiplyTableInput}
                               size={5}
                               onChange={handleMultiplicationInput(
@@ -354,6 +437,22 @@ const Home: NextPage = () => {
           </table>
         </div>
       </main>
+    </div>
+  );
+};
+
+const Time = ({ time }: { time: number }) => {
+  return (
+    <div className="timer">
+      <span className="digits">
+        {('0' + Math.floor((time / 60000) % 60)).slice(-2)}:
+      </span>
+      <span className="digits">
+        {('0' + Math.floor((time / 1000) % 60)).slice(-2)}.
+      </span>
+      <span className="digits mili-sec">
+        {('0' + ((time / 10) % 100)).slice(-2)}
+      </span>
     </div>
   );
 };
