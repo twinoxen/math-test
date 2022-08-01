@@ -83,14 +83,18 @@ const Home: NextPage = () => {
 
     const problems: Problem[] = [];
 
+    const selectedProblemTypes = problemType.filter((type) => type.checked);
+
     for (let index = 0; index < numberOfProblems + 1; index++) {
       const left = randomNumber(problemMin, problemMax);
       const right = randomNumber(problemMin, problemMax);
+
       problems.push({
         left,
         right,
-        type: problemType[Math.floor(Math.random() * problemType.length)]
-          .symbol,
+        type: selectedProblemTypes[
+          Math.floor(Math.random() * selectedProblemTypes.length)
+        ].symbol,
       });
     }
 
