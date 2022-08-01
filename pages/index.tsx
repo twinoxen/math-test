@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { createRef, useCallback, useEffect, useRef, useState } from 'react';
+import { createRef, useEffect, useRef, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
 export interface Problem {
@@ -15,15 +15,20 @@ export interface Problem {
 
 const Home: NextPage = () => {
   const [generatedProblems, setGeneratedProblems] = useState<Problem[]>([]);
-  const [problemType, setProblemType] = useState('+');
-  const [numberOfProblems, setNumberOfProblems] = useState(5);
+  const [problemType, setProblemType] = useState([
+    { name: 'Addition', symbol: '+', checked: true },
+    { name: 'Subtraction', symbol: '-', checked: false },
+    { name: 'Multiplication', symbol: '*', checked: false },
+    { name: 'Division', symbol: '/', checked: false },
+  ]);
+  const [numberOfProblems, setNumberOfProblems] = useState(10);
   const [problemMin, setProblemMin] = useState(1);
-  const [problemMax, setProblemMax] = useState(10);
+  const [problemMax, setProblemMax] = useState(100);
 
   const problemRefs = useRef([]);
 
   const [time, setTime] = useState(0);
-  const [lastTime, setLastTime] = useState(0)
+  const [lastTime, setLastTime] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
 
@@ -81,7 +86,12 @@ const Home: NextPage = () => {
     for (let index = 0; index < numberOfProblems + 1; index++) {
       const left = randomNumber(problemMin, problemMax);
       const right = randomNumber(problemMin, problemMax);
-      problems.push({ left, right, type: problemType });
+      problems.push({
+        left,
+        right,
+        type: problemType[Math.floor(Math.random() * problemType.length)]
+          .symbol,
+      });
     }
 
     if (problemRefs.current.length !== problems.length) {
@@ -114,6 +124,13 @@ const Home: NextPage = () => {
     return input.toFixed(2) === result?.toFixed(2);
   };
 
+  const handleProblemType = (index: number) => () => {
+    const update = [...problemType];
+    update[index].checked = !update[index].checked;
+
+    setProblemType(update);
+  };
+
   const handleProblemInput =
     (problem: Problem) => (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!onlyNumber(event)) {
@@ -139,7 +156,7 @@ const Home: NextPage = () => {
 
       event.target.style.backgroundColor = 'green';
       event.target.style.color = 'white';
-      
+
       focusNextInput(event);
 
       if (
@@ -274,21 +291,29 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Do you even math? 🤷‍♂️</h1>
-        <h2 style={{ marginTop: '4rem' }}>Generate random math problems</h2>
+        <h2 className="print-hide mt-10 font-bold text-2xl">
+          Generate random math problems
+        </h2>
 
-        <div className={styles.form}>
+        <div className={`print-hide mt-10 ${styles.form}`}>
           <div className={styles.formItem}>Type of problem </div>
           <div className={styles.formItem}>
-            <select
-              className={styles.select}
-              value={problemType}
-              onChange={(event) => setProblemType(event.target.value)}
-            >
-              <option value="+">Addition</option>
-              <option value="-">Subtraction</option>
-              <option value="*">Multiplication</option>
-              <option value="/">Division</option>
-            </select>
+            {problemType.map((type, index) => {
+              return (
+                <div key={index} onClick={handleProblemType(index)}>
+                  <input
+                    name="problemType"
+                    type="checkbox"
+                    checked={type.checked}
+                    value={type.symbol}
+                    onChange={handleProblemType(index)}
+                  />{' '}
+                  <label className="ml-1" htmlFor="problemType">
+                    {type.name}
+                  </label>
+                </div>
+              );
+            })}
           </div>
           <div className={styles.formItem}>Number of problems</div>
           <div className={styles.formItem}>
@@ -323,11 +348,9 @@ const Home: NextPage = () => {
               size={4}
             />
           </div>
-          <div className={styles.formItem}>
-            <div
-              style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
-            >
-              <div onClick={handlePauseResume}>
+          <div className="" onClick={handlePauseResume}>
+            <div className="flex gap-1 items-center mt-4">
+              <div className="h-[1.875rem]">
                 <Image
                   src="/timer-icon.svg"
                   alt="timer"
@@ -346,7 +369,9 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        {problemType === '/' && (
+        {problemType.find(
+          (type) => type.name === 'Division' && type.checked
+        ) && (
           <p style={{ marginTop: '3rem' }}>
             precision to the nearest hundredth decimal exp: 1.03
           </p>
@@ -394,64 +419,70 @@ const Home: NextPage = () => {
           })}
         </div>
 
-        <h2>Multiplication Table</h2>
-        <p>
-          Number range{' '}
-          <input
-            className={styles.rangeInput}
-            value={multiplicationMin}
-            onChange={setMultiMin}
-            placeholder="0"
-            type="text"
-            size={4}
-          />{' '}
-          -{' '}
-          <input
-            className={styles.rangeInput}
-            value={multiplicationMax}
-            onChange={setMultiMax}
-            placeholder="0"
-            type="text"
-            size={4}
-          />
-        </p>
-        <div className={styles.table}>
-          <table>
-            <tbody>
-              {multiplicationNumbersRange.map((parentItem, index) => (
-                <tr key={`parent-${parentItem}`}>
-                  {parentItem !== multiplicationNumbersRange[0] && (
-                    <td className={styles.multiplyTableHeader}>{parentItem}</td>
-                  )}
-                  {parentItem === multiplicationNumbersRange[0]
-                    ? multiplicationNumbersRange.map(
-                        (childItem, childIndex) => (
-                          <td
-                            className={styles.multiplyTableHeader}
-                            key={`child-${childIndex}`}
-                          >
-                            {childItem}
-                          </td>
+        <div className="print-page-break section-multiplication-table">
+          <h2 className="text-center font-bold text-2xl mb-5">
+            Multiplication Table
+          </h2>
+          <p className="print-hide text-center p-4">
+            Number range{' '}
+            <input
+              className={styles.rangeInput}
+              value={multiplicationMin}
+              onChange={setMultiMin}
+              placeholder="0"
+              type="text"
+              size={4}
+            />{' '}
+            -{' '}
+            <input
+              className={styles.rangeInput}
+              value={multiplicationMax}
+              onChange={setMultiMax}
+              placeholder="0"
+              type="text"
+              size={4}
+            />
+          </p>
+          <div className={styles.table}>
+            <table>
+              <tbody>
+                {multiplicationNumbersRange.map((parentItem, index) => (
+                  <tr key={`parent-${parentItem}`}>
+                    {parentItem !== multiplicationNumbersRange[0] && (
+                      <td className={styles.multiplyTableHeader}>
+                        {parentItem}
+                      </td>
+                    )}
+                    {parentItem === multiplicationNumbersRange[0]
+                      ? multiplicationNumbersRange.map(
+                          (childItem, childIndex) => (
+                            <td
+                              className={styles.multiplyTableHeader}
+                              key={`child-${childIndex}`}
+                            >
+                              {childItem}
+                            </td>
+                          )
                         )
-                      )
-                    : multiplicationNumbersRange
-                        .filter((i) => i !== multiplicationNumbersRange[0])
-                        .map((childItem, childIndex) => (
-                          <td key={`child-${childIndex}`}>
-                            <input
-                              className={styles.multiplyTableInput}
-                              size={5}
-                              onChange={handleMultiplicationInput(
-                                parentItem,
-                                childItem
-                              )}
-                            />
-                          </td>
-                        ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      : multiplicationNumbersRange
+                          .filter((i) => i !== multiplicationNumbersRange[0])
+                          .map((childItem, childIndex) => (
+                            <td key={`child-${childIndex}`}>
+                              <input
+                                className={styles.multiplyTableInput}
+                                size={5}
+                                onChange={handleMultiplicationInput(
+                                  parentItem,
+                                  childItem
+                                )}
+                              />
+                            </td>
+                          ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
     </div>

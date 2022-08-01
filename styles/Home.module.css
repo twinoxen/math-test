@@ -166,7 +166,14 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 800px;
+  max-width: 50rem;
+}
+
+@media print {
+  .problems {
+    align-items: flex-start !important;
+    align-content: flex-start !important;
+  }
 }
 
 .problem {
