@@ -64,7 +64,7 @@ const ProblemGenerator: React.FC = () => {
 
     if (!next) return;
 
-    const childInput = next.firstChild as HTMLInputElement;
+    const childInput = next.childNodes[1] as HTMLInputElement;
 
     childInput?.focus();
   };
@@ -311,12 +311,12 @@ const ProblemGenerator: React.FC = () => {
         {problemType.find(
           (type) => type.name === 'Division' && type.checked
         ) && (
-          <p className='text-sm mb-8'>
+          <p className="text-sm mb-8">
             *precision to the nearest hundredth decimal exp: 1.03
           </p>
         )}
 
-        <div className="grid grid-cols-2 gap-4 items-center">
+        <div className="grid grid-cols-2 gap-8 items-center">
           {generatedProblems.map((problem, index) => {
             return (
               <div
@@ -324,9 +324,31 @@ const ProblemGenerator: React.FC = () => {
                 className="flex items-center gap-4"
                 style={{ position: 'relative' }}
               >
-                <span className='grow text-right'>{`${problem.left} ${readableType(problem.type)} ${
-                  problem.right
-                } = `}</span>
+                <div className="grow text-right relative">
+                  {`${problem.left} ${readableType(problem.type)} ${
+                    problem.right
+                  } = `}
+                  {problem.elapsed && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        gap: '0.15rem',
+                        right: '-4px',
+                        color: '#99D492',
+                      }}
+                    >
+                      <Time time={problem.elapsed} />
+                      <Image
+                        src="/timer-icon.svg"
+                        alt="timer"
+                        width={15}
+                        height={15}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    </div>
+                  )}
+                </div>
                 <input
                   className="grow-0 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-400"
                   size={5}
@@ -334,26 +356,6 @@ const ProblemGenerator: React.FC = () => {
                   onChange={handleProblemInput(problem)}
                   pattern="[0-9]*"
                 />
-                {problem.elapsed && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      display: 'flex',
-                      gap: '0.15rem',
-                      right: '0.4rem',
-                      color: '#99D492',
-                    }}
-                  >
-                    <Time time={problem.elapsed} />
-                    <Image
-                      src="/timer-icon.svg"
-                      alt="timer"
-                      width={15}
-                      height={15}
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </div>
-                )}
               </div>
             );
           })}
