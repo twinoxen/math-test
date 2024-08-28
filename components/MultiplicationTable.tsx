@@ -20,16 +20,17 @@ const MultiplicationTable: React.FC = () => {
 
   const focusNextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target;
-
     if (!input) return;
 
-    const next = input.parentNode?.nextSibling;
+    const allInputs = document.querySelectorAll('input');
 
-    if (!next) return;
+    const currentIndex = Array.from(allInputs).indexOf(input);
 
-    const childInput = next.firstChild as HTMLInputElement;
+    if (currentIndex === allInputs.length - 1) return;
 
-    childInput?.focus();
+    const nextInput = allInputs[currentIndex + 1] as HTMLInputElement;
+
+    nextInput.focus();
   };
 
   const setMultiRange = () => {

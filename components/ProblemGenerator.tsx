@@ -57,16 +57,17 @@ const ProblemGenerator: React.FC = () => {
 
   const focusNextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target;
-
     if (!input) return;
 
-    const next = input.parentNode?.nextSibling;
+    const allInputs = document.querySelectorAll('input');
 
-    if (!next) return;
+    const currentIndex = Array.from(allInputs).indexOf(input);
 
-    const childInput = next.childNodes[1] as HTMLInputElement;
+    if (currentIndex === allInputs.length - 1) return;
 
-    childInput?.focus();
+    const nextInput = allInputs[currentIndex + 1] as HTMLInputElement;
+
+    nextInput.focus();
   };
 
   const generateProblems = () => {
@@ -102,7 +103,7 @@ const ProblemGenerator: React.FC = () => {
     setGeneratedProblems(problems);
   };
 
-  const evaluate = (input: number, problem: Problem) => {
+  const getAnswer = (problem: Problem): number | null => {
     let result: number | null = null;
 
     switch (problem.type) {
@@ -120,7 +121,11 @@ const ProblemGenerator: React.FC = () => {
         break;
     }
 
-    return input.toFixed(2) === result?.toFixed(2);
+    return result ?? null;
+  }
+
+  const isCorrect = (input: number, answer: number | null) => {
+    return Math.abs(input).toFixed(2) === Math.abs(answer ?? 0)?.toFixed(2);
   };
 
   const handleProblemType = (index: number) => () => {
@@ -140,11 +145,16 @@ const ProblemGenerator: React.FC = () => {
 
       const input = parseFloat(event.target.value);
 
-      if (!evaluate(input, problem)) {
+      const answer = getAnswer(problem);
+      if (!isCorrect(input, answer)) {
         event.target.style.backgroundColor = 'red';
         event.target.style.color = 'white';
 
         return;
+      }
+
+      if (answer && answer < 0) {
+        event.target.value = `-${input}`;
       }
 
       problem.passed = true;
