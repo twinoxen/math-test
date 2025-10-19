@@ -499,6 +499,17 @@ input.md\\:text-base {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+  
+  /* Prevent input overflow on very small screens */
+  .input {
+    min-width: 0;
+    max-width: 100%;
+  }
+  
+  /* Smaller gaps for range inputs */
+  .flex.gap-2 {
+    gap: 0.25rem;
+  }
 }
 
 /* Touch device optimizations */

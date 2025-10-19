@@ -278,7 +278,7 @@ const ProblemGenerator: React.FC = () => {
                       Number of Problems
                     </label>
                     <input
-                      className="input w-full"
+                      className="input w-full max-w-24 sm:max-w-32"
                       value={numberOfProblems}
                       onChange={(event) =>
                         setNumberOfProblems(parseInt(event.target.value))
@@ -293,9 +293,9 @@ const ProblemGenerator: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-600 mb-2">
                       Number Range
                     </label>
-                    <div className="flex gap-3 items-center">
+                    <div className="flex gap-2 sm:gap-3 items-center">
                       <input
-                        className="input flex-1"
+                        className="input w-16 sm:w-20 text-center"
                         value={problemMin}
                         onChange={(event) =>
                           setProblemMin(parseInt(event.target.value))
@@ -304,9 +304,9 @@ const ProblemGenerator: React.FC = () => {
                         type="text"
                         pattern="[0-9]*"
                       />
-                      <span className="text-gray-500 font-medium">to</span>
+                      <span className="text-gray-500 font-medium text-sm">to</span>
                       <input
-                        className="input flex-1"
+                        className="input w-16 sm:w-20 text-center"
                         value={problemMax}
                         onChange={(event) =>
                           setProblemMax(parseInt(event.target.value))
@@ -394,7 +394,7 @@ const ProblemGenerator: React.FC = () => {
                         )}
                       </div>
                       <input
-                        className="input w-20 text-center font-medium"
+                        className="input w-16 sm:w-20 text-center font-medium"
                         ref={problemRefs.current[index]}
                         onChange={handleProblemInput(problem)}
                         pattern="[0-9]*"

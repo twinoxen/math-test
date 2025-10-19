@@ -123,20 +123,20 @@ const MultiplicationTable: React.FC = () => {
           </h2>
           
           <div className="print-hide">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-              <span className="text-lg font-medium text-gray-700">Practice Range:</span>
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-6">
+              <span className="text-base sm:text-lg font-medium text-gray-700 mb-2 sm:mb-0">Practice Range:</span>
+              <div className="flex items-center gap-2 sm:gap-3">
                 <input
-                  className="input w-20 text-center"
+                  className="input w-14 sm:w-16 md:w-20 text-center"
                   value={multiplicationMin}
                   onChange={setMultiMin}
                   placeholder="0"
                   type="text"
                   pattern="[0-9]*"
                 />
-                <span className="text-gray-500 font-medium">to</span>
+                <span className="text-gray-500 font-medium text-sm">to</span>
                 <input
-                  className="input w-20 text-center"
+                  className="input w-14 sm:w-16 md:w-20 text-center"
                   value={multiplicationMax}
                   onChange={setMultiMax}
                   placeholder="10"
