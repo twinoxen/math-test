@@ -427,8 +427,9 @@ body {
 
 @media (max-width: 480px) {
   .card {
-    margin: var(--spacing-xs);
+    margin: 0;
     padding: var(--spacing-md);
+    border-radius: 0;
   }
   
   .btn {
@@ -452,6 +453,30 @@ body {
   
   .timer .mili-sec {
     font-size: 0.75rem;
+  }
+}
+
+/* Very small screens - edge to edge cards */
+@media (max-width: 400px) {
+  body {
+    padding: 0;
+  }
+  
+  .card {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none;
+    border-right: none;
+  }
+  
+  section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 

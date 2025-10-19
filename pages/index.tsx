@@ -60,7 +60,7 @@ const Home: NextPage = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pb-12">
+      <main className="container mx-auto px-0 sm:px-4 pb-12">
         <div className="animate-fade-in">
           {activeTab === 'problems' && (
             <div className="animate-slide-in">

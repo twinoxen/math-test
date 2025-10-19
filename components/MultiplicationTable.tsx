@@ -114,7 +114,7 @@ const MultiplicationTable: React.FC = () => {
     };
 
   return (
-    <section className="px-4">
+    <section className="px-0 sm:px-4">
       <div className="w-full max-w-6xl mx-auto">
         {/* Header Card */}
         <div className="card p-6 sm:p-8 mb-8 animate-scale-in">

@@ -221,7 +221,7 @@ const ProblemGenerator: React.FC = () => {
   }, [isActive, isPaused]);
 
   return (
-    <section className="flex flex-col justify-center items-center px-4">
+    <section className="flex flex-col justify-center items-center px-0 sm:px-4">
       <div className="w-full max-w-4xl">
         {/* Settings Card */}
         <div className="card p-6 sm:p-8 mb-8 animate-scale-in">
