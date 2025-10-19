@@ -314,8 +314,29 @@ body {
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.9);
   transition: all 0.2s ease;
-  font-size: 0.875rem;
+  font-size: 16px; /* Minimum 16px to prevent iOS zoom */
   line-height: 1.25rem;
+}
+
+/* Ensure all input elements have minimum 16px font size for iOS */
+input[type="text"], 
+input[type="number"], 
+input[type="email"], 
+input[type="password"], 
+input[type="search"], 
+input[type="tel"], 
+input[type="url"],
+input[pattern*="[0-9]"],
+input {
+  font-size: 16px !important; /* Force 16px minimum to prevent iOS zoom */
+}
+
+/* Override Tailwind responsive text classes for inputs */
+input.text-xs,
+input.text-sm,
+input.sm\\:text-sm,
+input.md\\:text-base {
+  font-size: 16px !important;
 }
 
 .input:focus {
@@ -412,7 +433,7 @@ body {
   
   .input {
     padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: 0.8125rem;
+    font-size: 16px; /* Keep 16px minimum for iOS */
   }
   
   /* Mobile-specific animations */
@@ -439,7 +460,7 @@ body {
   
   .input {
     padding: var(--spacing-xs);
-    font-size: 0.75rem;
+    font-size: 16px; /* Keep 16px minimum for iOS */
   }
   
   /* Extra small screen optimizations */

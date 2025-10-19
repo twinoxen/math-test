@@ -197,7 +197,8 @@ const MultiplicationTable: React.FC = () => {
                           key={`input-${parentIndex}-${childIndex}`}
                         >
                           <input
-                            className="w-full h-full text-center text-xs sm:text-sm md:text-base font-medium border-none bg-transparent focus:bg-blue-50 transition-all duration-300 hover:bg-gray-50"
+                            className="w-full h-full text-center font-medium border-none bg-transparent focus:bg-blue-50 transition-all duration-300 hover:bg-gray-50"
+                            style={{ fontSize: '16px' }}
                             onChange={handleMultiplicationInput(
                               parentIndex,
                               childIndex
