@@ -129,7 +129,10 @@ const ProblemGenerator: React.FC = () => {
     return Math.abs(input).toFixed(2) === Math.abs(answer ?? 0)?.toFixed(2);
   };
 
-  const handleProblemType = (index: number) => () => {
+  const handleProblemType = (index: number) => (event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLDivElement>) => {
+    // Prevent event bubbling to avoid double-toggle
+    event.stopPropagation();
+    
     const update = [...problemType];
     update[index].checked = !update[index].checked;
 
@@ -252,8 +255,8 @@ const ProblemGenerator: React.FC = () => {
                           type="checkbox"
                           checked={type.checked}
                           value={type.symbol}
-                          onChange={handleProblemType(index)}
-                          className="checkbox"
+                          onChange={() => {}} 
+                          className="checkbox pointer-events-none"
                         />
                         <div className="flex items-center gap-2">
                           <span className="text-xl">{icons[type.symbol as keyof typeof icons]}</span>
