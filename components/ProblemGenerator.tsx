@@ -394,29 +394,31 @@ const ProblemGenerator: React.FC = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <div className="text-lg font-medium text-gray-700 relative">
+                      <div className="text-lg font-medium text-gray-700">
                         {`${problem.left} ${readableType(problem.type)} ${
                           problem.right
                         } =`}
+                      </div>
+                      <div className="flex items-center gap-2">
                         {problem.elapsed && (
-                          <div className="absolute -top-6 right-0 flex items-center gap-1 text-xs text-green-600">
-                            <Time time={problem.elapsed} />
+                          <div className="flex items-center gap-1 text-xs text-green-600 font-medium animate-fade-in">
                             <Image
                               src="/timer-icon.svg"
                               alt="timer"
                               width={12}
                               height={12}
                             />
+                            <Time time={problem.elapsed} />
                           </div>
                         )}
+                        <input
+                          className="input w-16 sm:w-20 text-center font-medium"
+                          ref={problemRefs.current[index]}
+                          onChange={handleProblemInput(problem)}
+                          pattern="[0-9]*"
+                          placeholder="?"
+                        />
                       </div>
-                      <input
-                        className="input w-16 sm:w-20 text-center font-medium"
-                        ref={problemRefs.current[index]}
-                        onChange={handleProblemInput(problem)}
-                        pattern="[0-9]*"
-                        placeholder="?"
-                      />
                     </div>
                   </div>
                 );
