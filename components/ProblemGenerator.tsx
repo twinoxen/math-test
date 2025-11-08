@@ -129,7 +129,10 @@ const ProblemGenerator: React.FC = () => {
     return Math.abs(input).toFixed(2) === Math.abs(answer ?? 0)?.toFixed(2);
   };
 
-  const handleProblemType = (index: number) => () => {
+  const handleProblemType = (index: number) => (event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLDivElement>) => {
+    // Prevent event bubbling to avoid double-toggle
+    event.stopPropagation();
+    
     const update = [...problemType];
     update[index].checked = !update[index].checked;
 
@@ -240,27 +243,37 @@ const ProblemGenerator: React.FC = () => {
                     <div
                       key={index}
                       onClick={handleProblemType(index)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
+                      className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
                         type.checked
                           ? 'border-blue-400 bg-blue-50 shadow-md'
                           : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <input
-                          name="problemType"
-                          type="checkbox"
-                          checked={type.checked}
-                          value={type.symbol}
-                          onChange={handleProblemType(index)}
-                          className="checkbox"
-                        />
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">{icons[type.symbol as keyof typeof icons]}</span>
-                          <label className="font-medium text-gray-700 cursor-pointer">
-                            {type.name}
-                          </label>
+                      {/* Hidden checkbox for accessibility */}
+                      <input
+                        name="problemType"
+                        type="checkbox"
+                        checked={type.checked}
+                        value={type.symbol}
+                        onChange={() => {}} 
+                        className="sr-only"
+                        aria-label={type.name}
+                      />
+                      
+                      {/* Green checkmark indicator in upper left */}
+                      {type.checked && (
+                        <div className="absolute -top-2 -left-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg animate-scale-in">
+                          <svg className="w-4 h-4 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M5 13l4 4L19 7"></path>
+                          </svg>
                         </div>
+                      )}
+                      
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-xl">{icons[type.symbol as keyof typeof icons]}</span>
+                        <label className="font-medium text-gray-700 cursor-pointer">
+                          {type.name}
+                        </label>
                       </div>
                     </div>
                   );
@@ -268,17 +281,20 @@ const ProblemGenerator: React.FC = () => {
               </div>
             </div>
 
-            {/* Settings Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-slide-in">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-700">Settings</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Number of Problems
-                    </label>
+            {/* Settings Section */}
+            <div className="space-y-6 animate-slide-in pb-4">
+              {/* Compact Settings Row */}
+              <div className="bg-gradient-to-r from-purple-50 via-blue-50 to-green-50 p-6 rounded-2xl border-2 border-white/50 shadow-lg">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 flex-wrap">
+                  
+                  {/* Number of Problems */}
+                  <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🔢</span>
+                      <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">Problems</span>
+                    </div>
                     <input
-                      className="input w-full max-w-24 sm:max-w-32"
+                      className="input text-center text-2xl font-bold w-20 h-12 bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-300 rounded-xl shadow-sm focus:border-purple-500 focus:shadow-md transition-all duration-300"
                       value={numberOfProblems}
                       onChange={(event) =>
                         setNumberOfProblems(parseInt(event.target.value))
@@ -288,14 +304,19 @@ const ProblemGenerator: React.FC = () => {
                       pattern="[0-9]*"
                     />
                   </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Number Range
-                    </label>
-                    <div className="flex gap-2 sm:gap-3 items-center">
+
+                  {/* Divider */}
+                  <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+
+                  {/* Number Range */}
+                  <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">📏</span>
+                      <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">Range</span>
+                    </div>
+                    <div className="flex items-center gap-2">
                       <input
-                        className="input w-16 sm:w-20 text-center"
+                        className="input text-center text-2xl font-bold w-16 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 border-2 border-blue-300 rounded-xl shadow-sm focus:border-blue-500 focus:shadow-md transition-all duration-300"
                         value={problemMin}
                         onChange={(event) =>
                           setProblemMin(parseInt(event.target.value))
@@ -304,9 +325,9 @@ const ProblemGenerator: React.FC = () => {
                         type="text"
                         pattern="[0-9]*"
                       />
-                      <span className="text-gray-500 font-medium text-sm">to</span>
+                      <span className="text-xl font-bold text-gray-400">-</span>
                       <input
-                        className="input w-16 sm:w-20 text-center"
+                        className="input text-center text-2xl font-bold w-16 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 border-2 border-blue-300 rounded-xl shadow-sm focus:border-blue-500 focus:shadow-md transition-all duration-300"
                         value={problemMax}
                         onChange={(event) =>
                           setProblemMax(parseInt(event.target.value))
@@ -317,35 +338,31 @@ const ProblemGenerator: React.FC = () => {
                       />
                     </div>
                   </div>
+
+                  {/* Divider */}
+                  <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+
+                  {/* Timer */}
+                  <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer" onClick={handlePauseResume}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">⏱️</span>
+                      <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">Timer</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 px-3 py-2 rounded-lg">
+                      <Time time={time} />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Timer and Generate */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-700">Timer</h3>
-                <div className="glass-card p-4 rounded-xl">
-                  <div 
-                    className="flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform duration-200" 
-                    onClick={handlePauseResume}
-                  >
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Image
-                        src="/timer-icon.svg"
-                        alt="timer"
-                        width={24}
-                        height={24}
-                        className="opacity-80"
-                      />
-                    </div>
-                    <Time time={time} />
-                  </div>
-                </div>
-                
+              {/* Generate Button */}
+              <div className="flex justify-center pb-2">
                 <button
-                  className="btn btn-success w-full py-4 text-lg font-semibold animate-bounce"
+                  className="btn btn-success px-12 py-5 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                   onClick={generateProblems}
                 >
-                  🚀 Generate Problems
+                  <span className="text-xl mr-2">🚀</span>
+                  Generate Problems
                 </button>
               </div>
             </div>
@@ -377,29 +394,31 @@ const ProblemGenerator: React.FC = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <div className="text-lg font-medium text-gray-700 relative">
+                      <div className="text-lg font-medium text-gray-700">
                         {`${problem.left} ${readableType(problem.type)} ${
                           problem.right
                         } =`}
+                      </div>
+                      <div className="flex items-center gap-2">
                         {problem.elapsed && (
-                          <div className="absolute -top-6 right-0 flex items-center gap-1 text-xs text-green-600">
-                            <Time time={problem.elapsed} />
+                          <div className="flex items-center gap-1 text-xs text-green-600 font-medium animate-fade-in">
                             <Image
                               src="/timer-icon.svg"
                               alt="timer"
                               width={12}
                               height={12}
                             />
+                            <Time time={problem.elapsed} />
                           </div>
                         )}
+                        <input
+                          className="input w-16 sm:w-20 text-center font-medium"
+                          ref={problemRefs.current[index]}
+                          onChange={handleProblemInput(problem)}
+                          pattern="[0-9]*"
+                          placeholder="?"
+                        />
                       </div>
-                      <input
-                        className="input w-16 sm:w-20 text-center font-medium"
-                        ref={problemRefs.current[index]}
-                        onChange={handleProblemInput(problem)}
-                        pattern="[0-9]*"
-                        placeholder="?"
-                      />
                     </div>
                   </div>
                 );
