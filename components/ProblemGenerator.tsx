@@ -243,27 +243,37 @@ const ProblemGenerator: React.FC = () => {
                     <div
                       key={index}
                       onClick={handleProblemType(index)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
+                      className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
                         type.checked
                           ? 'border-blue-400 bg-blue-50 shadow-md'
                           : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <input
-                          name="problemType"
-                          type="checkbox"
-                          checked={type.checked}
-                          value={type.symbol}
-                          onChange={() => {}} 
-                          className="checkbox pointer-events-none"
-                        />
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">{icons[type.symbol as keyof typeof icons]}</span>
-                          <label className="font-medium text-gray-700 cursor-pointer">
-                            {type.name}
-                          </label>
+                      {/* Hidden checkbox for accessibility */}
+                      <input
+                        name="problemType"
+                        type="checkbox"
+                        checked={type.checked}
+                        value={type.symbol}
+                        onChange={() => {}} 
+                        className="sr-only"
+                        aria-label={type.name}
+                      />
+                      
+                      {/* Green checkmark indicator in upper left */}
+                      {type.checked && (
+                        <div className="absolute -top-2 -left-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg animate-scale-in">
+                          <svg className="w-4 h-4 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M5 13l4 4L19 7"></path>
+                          </svg>
                         </div>
+                      )}
+                      
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-xl">{icons[type.symbol as keyof typeof icons]}</span>
+                        <label className="font-medium text-gray-700 cursor-pointer">
+                          {type.name}
+                        </label>
                       </div>
                     </div>
                   );
