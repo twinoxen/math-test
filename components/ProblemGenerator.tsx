@@ -281,20 +281,20 @@ const ProblemGenerator: React.FC = () => {
               </div>
             </div>
 
-            {/* Settings Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-in">
-              {/* Number of Problems Card */}
-              <div className="glass-card p-6 rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-purple-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="text-4xl">🔢</div>
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    Number of Problems
-                  </h3>
-                </div>
-                <div className="flex items-center justify-center">
-                  <div className="relative">
+            {/* Settings Section */}
+            <div className="space-y-6 animate-slide-in pb-4">
+              {/* Compact Settings Row */}
+              <div className="bg-gradient-to-r from-purple-50 via-blue-50 to-green-50 p-6 rounded-2xl border-2 border-white/50 shadow-lg">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 flex-wrap">
+                  
+                  {/* Number of Problems */}
+                  <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🔢</span>
+                      <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">Problems</span>
+                    </div>
                     <input
-                      className="input text-center text-4xl font-bold w-32 h-20 bg-gradient-to-br from-purple-50 to-pink-50 border-3 border-purple-300 rounded-2xl shadow-lg focus:border-purple-500 focus:shadow-xl transition-all duration-300"
+                      className="input text-center text-2xl font-bold w-20 h-12 bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-300 rounded-xl shadow-sm focus:border-purple-500 focus:shadow-md transition-all duration-300"
                       value={numberOfProblems}
                       onChange={(event) =>
                         setNumberOfProblems(parseInt(event.target.value))
@@ -303,89 +303,65 @@ const ProblemGenerator: React.FC = () => {
                       type="text"
                       pattern="[0-9]*"
                     />
-                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-purple-600 whitespace-nowrap">
-                      questions
+                  </div>
+
+                  {/* Divider */}
+                  <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+
+                  {/* Number Range */}
+                  <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">📏</span>
+                      <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">Range</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        className="input text-center text-2xl font-bold w-16 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 border-2 border-blue-300 rounded-xl shadow-sm focus:border-blue-500 focus:shadow-md transition-all duration-300"
+                        value={problemMin}
+                        onChange={(event) =>
+                          setProblemMin(parseInt(event.target.value))
+                        }
+                        placeholder="1"
+                        type="text"
+                        pattern="[0-9]*"
+                      />
+                      <span className="text-xl font-bold text-gray-400">-</span>
+                      <input
+                        className="input text-center text-2xl font-bold w-16 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 border-2 border-blue-300 rounded-xl shadow-sm focus:border-blue-500 focus:shadow-md transition-all duration-300"
+                        value={problemMax}
+                        onChange={(event) =>
+                          setProblemMax(parseInt(event.target.value))
+                        }
+                        placeholder="10"
+                        type="text"
+                        pattern="[0-9]*"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
+
+                  {/* Timer */}
+                  <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer" onClick={handlePauseResume}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">⏱️</span>
+                      <span className="text-sm font-semibold text-gray-700 whitespace-nowrap">Timer</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-gradient-to-r from-green-100 to-emerald-100 px-3 py-2 rounded-lg">
+                      <Time time={time} />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Number Range Card */}
-              <div className="glass-card p-6 rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-blue-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="text-4xl">📏</div>
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                    Number Range
-                  </h3>
-                </div>
-                <div className="flex items-center justify-center gap-4">
-                  <div className="relative">
-                    <input
-                      className="input text-center text-3xl font-bold w-24 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 border-3 border-blue-300 rounded-2xl shadow-lg focus:border-blue-500 focus:shadow-xl transition-all duration-300"
-                      value={problemMin}
-                      onChange={(event) =>
-                        setProblemMin(parseInt(event.target.value))
-                      }
-                      placeholder="1"
-                      type="text"
-                      pattern="[0-9]*"
-                    />
-                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-600">
-                      min
-                    </div>
-                  </div>
-                  <div className="text-3xl font-bold text-gray-400">→</div>
-                  <div className="relative">
-                    <input
-                      className="input text-center text-3xl font-bold w-24 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 border-3 border-blue-300 rounded-2xl shadow-lg focus:border-blue-500 focus:shadow-xl transition-all duration-300"
-                      value={problemMax}
-                      onChange={(event) =>
-                        setProblemMax(parseInt(event.target.value))
-                      }
-                      placeholder="10"
-                      type="text"
-                      pattern="[0-9]*"
-                    />
-                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-600">
-                      max
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Timer and Generate Button */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-slide-in">
-              <div className="glass-card p-6 rounded-2xl border-2 border-green-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="text-4xl">⏱️</div>
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                    Timer
-                  </h3>
-                </div>
-                <div 
-                  className="flex items-center justify-center gap-3 cursor-pointer hover:scale-110 transition-transform duration-200 bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl" 
-                  onClick={handlePauseResume}
-                >
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <Image
-                      src="/timer-icon.svg"
-                      alt="timer"
-                      width={28}
-                      height={28}
-                      className="opacity-80"
-                    />
-                  </div>
-                  <Time time={time} />
-                </div>
-              </div>
-              
-              <div className="flex items-center">
+              {/* Generate Button */}
+              <div className="flex justify-center pb-2">
                 <button
-                  className="btn btn-success w-full py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  className="btn btn-success px-12 py-5 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                   onClick={generateProblems}
                 >
-                  <span className="text-2xl mr-2">🚀</span>
+                  <span className="text-xl mr-2">🚀</span>
                   Generate Problems
                 </button>
               </div>
