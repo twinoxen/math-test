@@ -282,16 +282,19 @@ const ProblemGenerator: React.FC = () => {
             </div>
 
             {/* Settings Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-slide-in">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-700">Settings</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Number of Problems
-                    </label>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-in">
+              {/* Number of Problems Card */}
+              <div className="glass-card p-6 rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-purple-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl">🔢</div>
+                  <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    Number of Problems
+                  </h3>
+                </div>
+                <div className="flex items-center justify-center">
+                  <div className="relative">
                     <input
-                      className="input w-full max-w-24 sm:max-w-32"
+                      className="input text-center text-4xl font-bold w-32 h-20 bg-gradient-to-br from-purple-50 to-pink-50 border-3 border-purple-300 rounded-2xl shadow-lg focus:border-purple-500 focus:shadow-xl transition-all duration-300"
                       value={numberOfProblems}
                       onChange={(event) =>
                         setNumberOfProblems(parseInt(event.target.value))
@@ -300,65 +303,90 @@ const ProblemGenerator: React.FC = () => {
                       type="text"
                       pattern="[0-9]*"
                     />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">
-                      Number Range
-                    </label>
-                    <div className="flex gap-2 sm:gap-3 items-center">
-                      <input
-                        className="input w-16 sm:w-20 text-center"
-                        value={problemMin}
-                        onChange={(event) =>
-                          setProblemMin(parseInt(event.target.value))
-                        }
-                        placeholder="1"
-                        type="text"
-                        pattern="[0-9]*"
-                      />
-                      <span className="text-gray-500 font-medium text-sm">to</span>
-                      <input
-                        className="input w-16 sm:w-20 text-center"
-                        value={problemMax}
-                        onChange={(event) =>
-                          setProblemMax(parseInt(event.target.value))
-                        }
-                        placeholder="10"
-                        type="text"
-                        pattern="[0-9]*"
-                      />
+                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-purple-600 whitespace-nowrap">
+                      questions
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Timer and Generate */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-700">Timer</h3>
-                <div className="glass-card p-4 rounded-xl">
-                  <div 
-                    className="flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform duration-200" 
-                    onClick={handlePauseResume}
-                  >
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Image
-                        src="/timer-icon.svg"
-                        alt="timer"
-                        width={24}
-                        height={24}
-                        className="opacity-80"
-                      />
+              {/* Number Range Card */}
+              <div className="glass-card p-6 rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl">📏</div>
+                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                    Number Range
+                  </h3>
+                </div>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="relative">
+                    <input
+                      className="input text-center text-3xl font-bold w-24 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 border-3 border-blue-300 rounded-2xl shadow-lg focus:border-blue-500 focus:shadow-xl transition-all duration-300"
+                      value={problemMin}
+                      onChange={(event) =>
+                        setProblemMin(parseInt(event.target.value))
+                      }
+                      placeholder="1"
+                      type="text"
+                      pattern="[0-9]*"
+                    />
+                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-600">
+                      min
                     </div>
-                    <Time time={time} />
+                  </div>
+                  <div className="text-3xl font-bold text-gray-400">→</div>
+                  <div className="relative">
+                    <input
+                      className="input text-center text-3xl font-bold w-24 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 border-3 border-blue-300 rounded-2xl shadow-lg focus:border-blue-500 focus:shadow-xl transition-all duration-300"
+                      value={problemMax}
+                      onChange={(event) =>
+                        setProblemMax(parseInt(event.target.value))
+                      }
+                      placeholder="10"
+                      type="text"
+                      pattern="[0-9]*"
+                    />
+                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-600">
+                      max
+                    </div>
                   </div>
                 </div>
-                
+              </div>
+            </div>
+
+            {/* Timer and Generate Button */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-slide-in">
+              <div className="glass-card p-6 rounded-2xl border-2 border-green-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl">⏱️</div>
+                  <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    Timer
+                  </h3>
+                </div>
+                <div 
+                  className="flex items-center justify-center gap-3 cursor-pointer hover:scale-110 transition-transform duration-200 bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl" 
+                  onClick={handlePauseResume}
+                >
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <Image
+                      src="/timer-icon.svg"
+                      alt="timer"
+                      width={28}
+                      height={28}
+                      className="opacity-80"
+                    />
+                  </div>
+                  <Time time={time} />
+                </div>
+              </div>
+              
+              <div className="flex items-center">
                 <button
-                  className="btn btn-success w-full py-4 text-lg font-semibold animate-bounce"
+                  className="btn btn-success w-full py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                   onClick={generateProblems}
                 >
-                  🚀 Generate Problems
+                  <span className="text-2xl mr-2">🚀</span>
+                  Generate Problems
                 </button>
               </div>
             </div>
